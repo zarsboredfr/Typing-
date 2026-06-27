@@ -137,6 +137,26 @@ button {
   text-decoration: underline;
 }
 
+.google-button {
+  width: 100%;
+  background: #fff;
+  color: #111;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.google-button:hover {
+  background: #f6f6f6;
+}
+
 .auth-error {
   margin-top: 12px;
   color: #ff7f7f;

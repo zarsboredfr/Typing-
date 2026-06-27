@@ -8,6 +8,7 @@ const authTitle = document.getElementById('authTitle');
 const authSwitchText = document.getElementById('authSwitchText');
 const switchAuthButton = document.getElementById('switchAuthButton');
 const authError = document.getElementById('authError');
+const googleLoginButton = document.getElementById('googleLoginButton');
 const usernameInput = document.getElementById('usernameInput');
 const displayNameInput = document.getElementById('displayNameInput');
 const emailInput = document.getElementById('emailInput');
@@ -55,6 +56,8 @@ const API_BASE = (() => {
 let authMode = pageType === 'signup' ? 'signup' : 'login';
 let socket = null;
 let typingTimeout = null;
+let googleInitialized = false;
+let googleClientId = ''; 
 
 function getStoredAuth() {
   try {
@@ -120,6 +123,57 @@ function scrollToBottom() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
+async function initializeGoogleSignIn(retry = 0) {
+  if (!googleLoginButton) return;
+  if (typeof window.google === 'undefined') {
+    if (retry < 10) {
+      return setTimeout(() => initializeGoogleSignIn(retry + 1), 200);
+    }
+    return;
+  }
+
+  try {
+    const config = await apiFetch('/api/config');
+    googleClientId = config.googleClientId || '';
+    if (!googleClientId) return;
+    window.google.accounts.id.initialize({
+      client_id: googleClientId,
+      callback: handleGoogleCredentialResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true,
+    });
+    googleInitialized = true;
+  } catch (error) {
+    console.warn('Google sign-in initialization failed:', error);
+  }
+}
+
+async function handleGoogleCredentialResponse(response) {
+  if (!response?.credential) {
+    if (authError) authError.textContent = 'Google sign-in failed. Please try again.';
+    return;
+  }
+
+  try {
+    const data = await apiFetch('/api/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ idToken: response.credential }),
+    });
+    saveAuth({ token: data.token, user: data.user });
+    window.location.href = 'chat.html';
+  } catch (error) {
+    if (authError) authError.textContent = error.message;
+  }
+}
+
+async function promptGoogleLogin() {
+  if (!googleInitialized || typeof window.google === 'undefined') {
+    if (authError) authError.textContent = 'Google login is not ready yet. Refresh the page and try again.';
+    return;
+  }
+  window.google.accounts.id.prompt();
+}
+
 async function apiFetch(path, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   const url = API_BASE ? `${API_BASE}${path}` : path;
@@ -182,6 +236,7 @@ function setAuthMode(mode) {
   if (authSwitchText) authSwitchText.textContent = mode === 'login' ? 'No account?' : 'Already have one?';
   if (switchAuthButton) switchAuthButton.textContent = mode === 'login' ? 'Sign up' : 'Log in';
   if (authError) authError.textContent = '';
+  if (emailLabel) emailLabel.classList.toggle('hidden', mode === 'login');
 }
 
 function renderMessages(messages = [], currentUserId = null) {
@@ -234,26 +289,19 @@ async function loadCurrentUser() {
 
 async function submitAuth(event) {
   event.preventDefault();
-  const email = emailInput ? emailInput.value.trim() : '';
-  const username = usernameInput ? usernameInput.value.trim() : '';
+  const username = usernameInput.value.trim();
   const password = passwordInput.value.trim();
+  const email = emailInput ? emailInput.value.trim() : '';
 
-  if (authMode === 'signup') {
-    if (!username || !password || !email) {
-      if (authError) authError.textContent = 'Username, password, and email are required for sign up.';
-      return;
-    }
-  } else {
-    if (!email || !password) {
-      if (authError) authError.textContent = 'Email and password are required to log in.';
-      return;
-    }
+  if (!username || !password || (authMode === 'signup' && !email)) {
+    if (authError) authError.textContent = 'Username, password, and email are required for sign up.';
+    return;
   }
 
   try {
     const payload = authMode === 'signup'
       ? { username, displayName: displayNameInput?.value.trim(), password, email }
-      : { email, password };
+      : { username, password };
     const endpoint = authMode === 'signup' ? '/api/signup' : '/api/login';
     const data = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
     saveAuth({ token: data.token, user: data.user });
@@ -428,6 +476,9 @@ if (switchAuthButton) {
     }
   });
 }
+if (googleLoginButton) {
+  googleLoginButton.addEventListener('click', promptGoogleLogin);
+}
 if (logoutButton) {
   logoutButton.addEventListener('click', () => {
     clearAuth();
@@ -560,6 +611,7 @@ function initializePage() {
   if (getAuthToken()) {
     window.location.href = 'chat.html';
   }
+  initializeGoogleSignIn();
 }
 
 initializePage();

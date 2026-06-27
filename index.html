@@ -19,9 +19,9 @@
       <div class="auth-card">
         <h2 id="authTitle">Log in</h2>
         <form id="authForm">
-          <label id="emailLabel">
-            Email
-            <input id="emailInput" type="email" autocomplete="email" />
+          <label>
+            Username
+            <input id="usernameInput" type="text" autocomplete="username" />
           </label>
           <label>
             Password
@@ -29,6 +29,7 @@
           </label>
           <button type="submit">Continue</button>
         </form>
+        <button id="googleLoginButton" type="button" class="google-button">Continue with Google</button>
         <p class="auth-switch">
           <span id="authSwitchText">No account?</span>
           <button id="switchAuthButton" type="button" class="link-button">Sign up</button>
@@ -38,6 +39,7 @@
     </main>
   </div>
 
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="script.js"></script>
 </body>
 </html>

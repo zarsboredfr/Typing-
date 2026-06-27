@@ -5,9 +5,14 @@ const fs = require('fs');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
+const { OAuth2Client } = require('google-auth-library');
 const { Server } = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
 
+dotenv.config();
+const googleClientId = process.env.GOOGLE_CLIENT_ID || '';
+const googleClient = new OAuth2Client(googleClientId);
 const USERS_FILE = path.join(__dirname, 'users.json');
 const MESSAGES_FILE = path.join(__dirname, 'messages.json');
 const SESSIONS_FILE = path.join(__dirname, 'sessions.json');
@@ -130,6 +135,20 @@ function getTokenFromSocket(socket) {
   const authToken = socket.handshake.auth?.token;
   if (authToken) return authToken;
   return getCookieValue(socket.handshake.headers.cookie, 'typingAuth');
+}
+
+async function verifyGoogleIdToken(idToken) {
+  if (!googleClientId) return null;
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: googleClientId,
+    });
+    return ticket.getPayload();
+  } catch (error) {
+    console.error('Google token verification failed:', error?.message || error);
+    return null;
+  }
 }
 
 function setAuthCookie(res, token) {
@@ -346,17 +365,17 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
 });
 
 app.post('/api/login', loginLimiter, async (req, res) => {
-  const email = String(req.body.email || '').trim();
+  const username = String(req.body.username || '').trim();
   const password = String(req.body.password || '').trim();
 
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required.' });
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required.' });
   }
 
   const users = loadUsers();
-  const user = users.find((item) => item.email.toLowerCase() === email.toLowerCase());
+  const user = users.find((item) => item.username.toLowerCase() === username.toLowerCase());
   if (!user) {
-    return res.status(401).json({ error: 'Invalid email or password.' });
+    return res.status(401).json({ error: 'Invalid username or password.' });
   }
 
   if (user.lockedUntil && user.lockedUntil > Date.now()) {
@@ -380,6 +399,62 @@ app.post('/api/login', loginLimiter, async (req, res) => {
   const token = createSession(user.id);
   setAuthCookie(res, token);
   return res.json({ user: publicUser(user), token });
+});
+
+app.post('/api/auth/google', async (req, res) => {
+  const idToken = String(req.body.idToken || '').trim();
+  if (!idToken) {
+    return res.status(400).json({ error: 'Google ID token is required.' });
+  }
+
+  const payload = await verifyGoogleIdToken(idToken);
+  if (!payload?.email || payload.email_verified !== true) {
+    return res.status(401).json({ error: 'Invalid Google login.' });
+  }
+
+  const email = payload.email.toLowerCase();
+  const users = loadUsers();
+  let user = users.find((item) => item.email.toLowerCase() === email);
+
+  if (!user) {
+    let username = String(payload.email.split('@')[0] || 'user').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 18);
+    if (!username) username = `user${uuidv4().slice(0, 8)}`;
+    const existingUsernames = new Set(users.map((item) => item.username.toLowerCase()));
+    let suffix = 1;
+    while (existingUsernames.has(username.toLowerCase())) {
+      username = `${username}${suffix++}`;
+    }
+
+    user = {
+      id: uuidv4(),
+      username,
+      displayName: payload.name || username,
+      email,
+      password: '',
+      googleId: payload.sub,
+      avatar: payload.picture || `https://api.dicebear.com/initials/svg?seed=${encodeURIComponent(email)}`,
+      bio: '',
+      createdAt: Date.now(),
+      friends: [],
+      failedLoginAttempts: 0,
+      lockedUntil: null,
+    };
+    users.push(user);
+    saveUsers(users);
+  } else {
+    if (!user.googleId) {
+      user.googleId = payload.sub;
+      saveUsers(users);
+    }
+  }
+
+  const token = createSession(user.id);
+  setAuthCookie(res, token);
+  return res.json({ user: publicUser(user), token });
+});
+
+app.get('/api/config', (req, res) => {
+  return res.json({ googleClientId });
 });
 
 app.get('/api/messages', (req, res) => {
