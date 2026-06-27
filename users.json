@@ -1,0 +1,44 @@
+[
+  {
+    "id": "e76ee3d2-965b-4254-8cb2-baeb268b2953",
+    "username": "ZayythtNxxga",
+    "email": "kingthepluge@gmail.com",
+    "password": "6767676767",
+    "avatar": "https://i.pinimg.com/736x/c9/c9/1d/c9c91d3f302f28c3b5a2bb2d55905711.jpg",
+    "bio": "Idk",
+    "failedLoginAttempts": 5,
+    "lockedUntil": 1782525218415,
+    "friends": [
+      {
+        "userId": "6fd33d50-c992-447f-bea3-56efcd400b0e",
+        "since": 1782524182781
+      }
+    ]
+  },
+  {
+    "id": "c1bd9a40-fdc9-471e-a813-3e07ab2f184e",
+    "username": "xyz",
+    "displayName": "Zayy",
+    "email": "zaythepluge@gmail.com",
+    "password": "$2a$10$N2lU7DDw/IZSl2E35WuUUuEd7iu791vub8lGX/0azbn7ADaXkDaZi",
+    "avatar": "https://api.dicebear.com/initials/svg?seed=xyz",
+    "bio": "",
+    "createdAt": 1782523483347,
+    "friends": [],
+    "failedLoginAttempts": 0,
+    "lockedUntil": null
+  },
+  {
+    "id": "6fd33d50-c992-447f-bea3-56efcd400b0e",
+    "username": "xel",
+    "displayName": "Zayy",
+    "email": "kingon7acc@gmail.com",
+    "password": "$2a$10$Z3FpMVUTbyIfQCsddwOOAuFZGf2HgiZVedIp1FxJCePyO5KCk0z9q",
+    "avatar": "https://api.dicebear.com/initials/svg?seed=xel",
+    "bio": "",
+    "createdAt": 1782524009733,
+    "friends": [],
+    "failedLoginAttempts": 0,
+    "lockedUntil": null
+  }
+]

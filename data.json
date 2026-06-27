@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "id": "e63a7ae0-aad1-41dc-bfc4-6e97b29829f3",
+      "username": "ZayythtNxxga",
+      "email": "kingthepluge@gmail.com",
+      "password": "67676767"
+    }
+  ],
+  "messages": [
+    {
+      "id": "ff8b9ecf-ee2f-4f37-82cd-b33d3c37ad86",
+      "author": "ZayythtNxxga",
+      "userId": "e63a7ae0-aad1-41dc-bfc4-6e97b29829f3",
+      "text": "On bd that sky nga a bitch",
+      "createdAt": 1782519197999
+    },
+    {
+      "id": "e96801ce-2fe2-4184-b4c5-9f851ed06c48",
+      "author": "ZayythtNxxga",
+      "userId": "e63a7ae0-aad1-41dc-bfc4-6e97b29829f3",
+      "text": "I can merch",
+      "createdAt": 1782519205541
+    }
+  ],
+  "sessions": [
+    {
+      "token": "86b196af-1440-4184-9f95-e7c980337602",
+      "userId": "e63a7ae0-aad1-41dc-bfc4-6e97b29829f3"
+    }
+  ]
+}
