@@ -338,20 +338,21 @@ async function submitMessage(event) {
 }
 
 async function saveProfile() {
+  const username = settingsUsernameInput?.value.trim();
   const displayName = settingsDisplayNameInput?.value.trim();
   const email = settingsEmailInput?.value.trim();
   const avatar = settingsAvatarInput?.value.trim();
   const bio = settingsBioInput?.value.trim();
 
-  if (!displayName || !email) {
-    alert('Please fill in display name and email.');
+  if (!username || !displayName || !email) {
+    alert('Please fill in username, display name, and email.');
     return;
   }
 
   try {
     const data = await apiFetch('/api/me', {
       method: 'PUT',
-      body: JSON.stringify({ displayName, email, avatar, bio }),
+      body: JSON.stringify({ username, displayName, email, avatar, bio }),
     });
     saveAuth({ user: data.user });
     populateSettings(data.user);

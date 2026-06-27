@@ -545,13 +545,20 @@ app.put('/api/me', (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
+  const username = String(req.body.username || '').trim();
   const displayName = String(req.body.displayName || '').trim();
   const email = String(req.body.email || '').trim();
   const avatar = String(req.body.avatar || '').trim();
   const bio = String(req.body.bio || '').trim();
 
-  if (!displayName || !email) {
-    return res.status(400).json({ error: 'Display name and email are required.' });
+  if (!username || !displayName || !email) {
+    return res.status(400).json({ error: 'Username, display name, and email are required.' });
+  }
+  if (username.length < 3 || username.length > 20) {
+    return res.status(400).json({ error: 'Username must be between 3 and 20 characters.' });
+  }
+  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    return res.status(400).json({ error: 'Username may only contain letters, numbers, underscores, and hyphens.' });
   }
   if (displayName.length > 30) {
     return res.status(400).json({ error: 'Display name must be 30 characters or fewer.' });
@@ -561,11 +568,15 @@ app.put('/api/me', (req, res) => {
   }
 
   const users = loadUsers();
+  if (users.some((item) => item.id !== user.id && item.username.toLowerCase() === username.toLowerCase())) {
+    return res.status(400).json({ error: 'Username already exists.' });
+  }
   if (users.some((item) => item.id !== user.id && item.email.toLowerCase() === email.toLowerCase())) {
     return res.status(400).json({ error: 'Email already exists.' });
   }
 
   const updated = updateUser(user.id, {
+    username,
     displayName,
     email,
     avatar: avatar || user.avatar,
