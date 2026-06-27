@@ -346,17 +346,17 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
 });
 
 app.post('/api/login', loginLimiter, async (req, res) => {
-  const username = String(req.body.username || '').trim();
+  const email = String(req.body.email || '').trim();
   const password = String(req.body.password || '').trim();
 
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required.' });
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
   }
 
   const users = loadUsers();
-  const user = users.find((item) => item.username.toLowerCase() === username.toLowerCase());
+  const user = users.find((item) => item.email.toLowerCase() === email.toLowerCase());
   if (!user) {
-    return res.status(401).json({ error: 'Invalid username or password.' });
+    return res.status(401).json({ error: 'Invalid email or password.' });
   }
 
   if (user.lockedUntil && user.lockedUntil > Date.now()) {

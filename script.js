@@ -182,7 +182,6 @@ function setAuthMode(mode) {
   if (authSwitchText) authSwitchText.textContent = mode === 'login' ? 'No account?' : 'Already have one?';
   if (switchAuthButton) switchAuthButton.textContent = mode === 'login' ? 'Sign up' : 'Log in';
   if (authError) authError.textContent = '';
-  if (emailLabel) emailLabel.classList.toggle('hidden', mode === 'login');
 }
 
 function renderMessages(messages = [], currentUserId = null) {
@@ -235,19 +234,26 @@ async function loadCurrentUser() {
 
 async function submitAuth(event) {
   event.preventDefault();
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value.trim();
   const email = emailInput ? emailInput.value.trim() : '';
+  const username = usernameInput ? usernameInput.value.trim() : '';
+  const password = passwordInput.value.trim();
 
-  if (!username || !password || (authMode === 'signup' && !email)) {
-    if (authError) authError.textContent = 'Username, password, and email are required for sign up.';
-    return;
+  if (authMode === 'signup') {
+    if (!username || !password || !email) {
+      if (authError) authError.textContent = 'Username, password, and email are required for sign up.';
+      return;
+    }
+  } else {
+    if (!email || !password) {
+      if (authError) authError.textContent = 'Email and password are required to log in.';
+      return;
+    }
   }
 
   try {
     const payload = authMode === 'signup'
       ? { username, displayName: displayNameInput?.value.trim(), password, email }
-      : { username, password };
+      : { email, password };
     const endpoint = authMode === 'signup' ? '/api/signup' : '/api/login';
     const data = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
     saveAuth({ token: data.token, user: data.user });
