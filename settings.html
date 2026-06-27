@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings • Typing…</title>
+  <style>
+    :root {
+      --bg: #000;
+      --card: #111;
+      --border: #222;
+      --text: #ddd;
+      --accent: #0095f6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      background: #0a0a0a;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar h1 {
+      font-size: 24px;
+      padding: 0 24px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+
+    .menu-item {
+      padding: 12px 24px;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .menu-item.active {
+      border-left: 3px solid var(--accent);
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .settings-content {
+      margin-left: 280px;
+      flex: 1;
+      padding: 40px;
+      max-width: 800px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 8px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+    }
+
+    .avatar-preview {
+      display: block;
+      width: 72px;
+      height: 72px;
+      margin: 12px 0 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      background: #111;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0077cc;
+    }
+
+    .danger-btn {
+      background: #f23d3d;
+    }
+  </style>
+</head>
+<body data-page="settings">
+  <header class="app-header">
+    <div>
+      <h1>Typing…</h1>
+      <p id="userStatus" class="subtitle">Settings</p>
+    </div>
+    <div class="header-actions">
+      <a href="chat.html" class="text-button">Chat</a>
+      <button id="logoutButton" class="text-button">Logout</button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>Settings</h1>
+    
+    <div class="menu-item active" data-tab="profile">Profile</div>
+    <div class="menu-item" data-tab="security">Security</div>
+    <div class="menu-item" data-tab="privacy">Privacy</div>
+    <div class="menu-item" data-tab="notifications">Notifications</div>
+    <div class="menu-item" data-tab="appearance">Appearance</div>
+    <div class="menu-item" data-tab="about">About Typing…</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="settings-content">
+
+    <!-- Profile -->
+    <div id="profile" class="tab-content">
+      <h2 class="section-title">Profile Information</h2>
+      <div class="card">
+        <label>Username</label>
+        <input type="text" id="settingsUsernameInput" value="" />
+
+        <label>Avatar URL</label>
+        <input type="url" id="settingsAvatarInput" placeholder="https://example.com/avatar.png" />
+        <img id="avatarPreview" class="avatar-preview" alt="Avatar preview" src="" />
+
+        <label>Bio</label>
+        <textarea id="settingsBioInput" rows="3" placeholder="Write something about yourself..."></textarea>
+
+        <label>Email</label>
+        <input type="email" id="settingsEmailInput" value="" />
+        
+        <button type="button" id="settingsSaveProfileButton">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div id="security" class="tab-content hidden">
+      <h2 class="section-title">Security</h2>
+      <div class="card">
+        <label>Current Password</label>
+        <input type="password" id="settingsCurrentPass" />
+
+        <label>New Password</label>
+        <input type="password" id="settingsNewPass" />
+
+        <label>Confirm New Password</label>
+        <input type="password" id="settingsConfirmPass" />
+
+        <button type="button" id="settingsChangePasswordButton">Change Password</button>
+      </div>
+    </div>
+
+    <!-- Privacy -->
+    <div id="privacy" class="tab-content hidden">
+      <h2 class="section-title">Privacy</h2>
+      <div class="card">
+        <label>
+          <input type="checkbox" checked> Allow others to find me by username
+        </label>
+        <label>
+          <input type="checkbox"> Make my messages visible to everyone
+        </label>
+        <label>
+          <input type="checkbox" checked> Show online status
+        </label>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="tab-content hidden">
+      <h2 class="section-title">Notifications</h2>
+      <div class="card">
+        <p>Manage how you receive notifications</p>
+        <!-- Add toggles here -->
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div id="appearance" class="tab-content hidden">
+      <h2 class="section-title">Appearance</h2>
+      <div class="card">
+        <label>Theme</label>
+        <select>
+          <option>Dark (Default)</option>
+          <option>Light</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div id="about" class="tab-content hidden">
+      <h2 class="section-title">About Typing…</h2>
+      <div class="card">
+        <p>A simple, real-time chat app built for fun.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

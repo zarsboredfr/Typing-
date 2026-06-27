@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing… — Chat</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="chat">
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Typing…</h1>
+        <p id="userStatus" class="subtitle">Please log in</p>
+      </div>
+      <div class="header-actions">
+        <a href="settings.html" class="text-button">Settings</a>
+        <button id="logoutButton" class="text-button hidden">Logout</button>
+      </div>
+    </header>
+
+    <main class="main-area">
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <h2>Online</h2>
+          <div id="onlineUsers" class="online-list"></div>
+        </div>
+        <div class="sidebar-card">
+          <h2>Typing</h2>
+          <p id="typingIndicator" class="typing-indicator">No one is typing</p>
+        </div>
+      </aside>
+
+      <section class="chat-column">
+        <div class="channel-bar">
+          <div class="channel-title"># general</div>
+          <div class="channel-actions">
+            <button class="icon-button" type="button">+</button>
+          </div>
+        </div>
+
+        <div id="messages" class="messages"></div>
+        <form id="messageForm" class="composer">
+          <div class="composer-left">
+            <button id="emojiButton" type="button" class="icon-button">😀</button>
+            <button id="gifButton" type="button" class="icon-button">GIF</button>
+          </div>
+          <textarea id="messageInput" rows="2" inputmode="text" placeholder="Message #general" autocomplete="off"></textarea>
+          <button type="submit" class="send-button">Send</button>
+        </form>
+        <div id="emojiPicker" class="emoji-picker hidden">
+          <div class="picker-header">Emoji</div>
+          <div class="picker-grid">
+            <button type="button" class="emoji-item">😀</button>
+            <button type="button" class="emoji-item">😂</button>
+            <button type="button" class="emoji-item">❤️</button>
+            <button type="button" class="emoji-item">👍</button>
+            <button type="button" class="emoji-item">😎</button>
+            <button type="button" class="emoji-item">🎉</button>
+          </div>
+        </div>
+        <div id="gifPicker" class="gif-picker hidden">
+          <div class="picker-header">GIF</div>
+          <div class="picker-grid">
+            <button type="button" class="gif-item">😂</button>
+            <button type="button" class="gif-item">😍</button>
+            <button type="button" class="gif-item">🙌</button>
+            <button type="button" class="gif-item">🔥</button>
+            <button type="button" class="gif-item">🥳</button>
+            <button type="button" class="gif-item">😅</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="profileModal" class="profile-modal hidden">
+      <div class="profile-card">
+        <button id="profileClose" type="button" class="modal-close">×</button>
+        <img id="profileAvatar" class="profile-avatar" alt="Profile avatar" src="" />
+        <h2 id="profileDisplay">Display Name</h2>
+        <p id="profileUsername" class="profile-username"></p>
+        <p id="profileBio" class="profile-bio"></p>
+        <p><strong>Member since:</strong> <span id="profileMemberSince"></span></p>
+        <p><strong>Friends since:</strong> <span id="profileFriendsSince">Not friends yet</span></p>
+        <button id="profileFriendButton" type="button" class="send-button">Add Friend</button>
+      </div>
+    </div>
+    </main>
+
+    <div id="authError" class="auth-error auth-error-chat hidden"></div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

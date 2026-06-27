@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: TypingApp
+    env: node
+    plan: free
+    rootDir: ./
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    branch: main

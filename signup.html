@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing… — Sign up</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="signup">
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Typing…</h1>
+        <p class="subtitle">Create a new account</p>
+      </div>
+    </header>
+
+    <main class="auth-panel">
+      <div class="auth-card">
+        <h2>Sign up</h2>
+        <form id="authForm">
+          <label>
+            Username
+            <input id="usernameInput" type="text" autocomplete="username" />
+          </label>
+          <label>
+            Display name
+            <input id="displayNameInput" type="text" autocomplete="name" />
+          </label>
+          <label>
+            Email
+            <input id="emailInput" type="email" autocomplete="email" />
+          </label>
+          <label>
+            Password
+            <input id="passwordInput" type="password" autocomplete="new-password" />
+          </label>
+          <button type="submit">Create account</button>
+        </form>
+        <p class="auth-switch">
+          Already have an account?
+          <a href="index.html" class="link-button">Log in</a>
+        </p>
+        <div id="authError" class="auth-error"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
