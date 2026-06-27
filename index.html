@@ -15,9 +15,9 @@
       </div>
     </header>
 
-    <main class="auth-panel">
+    <main id="authSection" class="auth-panel">
       <div class="auth-card">
-        <h2>Log in</h2>
+        <h2 id="authTitle">Log in</h2>
         <form id="authForm">
           <label>
             Username
@@ -30,8 +30,8 @@
           <button type="submit">Continue</button>
         </form>
         <p class="auth-switch">
-          No account?
-          <a href="signup.html" class="link-button">Sign up</a>
+          <span id="authSwitchText">No account?</span>
+          <button id="switchAuthButton" type="button" class="link-button">Sign up</button>
         </p>
         <div id="authError" class="auth-error"></div>
       </div>

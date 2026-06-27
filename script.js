@@ -178,11 +178,11 @@ function populateSettings(user) {
 
 function setAuthMode(mode) {
   authMode = mode;
-  authTitle.textContent = mode === 'login' ? 'Log in' : 'Sign up';
-  authSwitchText.textContent = mode === 'login' ? 'No account?' : 'Already have one?';
-  switchAuthButton.textContent = mode === 'login' ? 'Sign up' : 'Log in';
-  authError.textContent = '';
-  emailLabel.classList.toggle('hidden', mode === 'login');
+  if (authTitle) authTitle.textContent = mode === 'login' ? 'Log in' : 'Sign up';
+  if (authSwitchText) authSwitchText.textContent = mode === 'login' ? 'No account?' : 'Already have one?';
+  if (switchAuthButton) switchAuthButton.textContent = mode === 'login' ? 'Sign up' : 'Log in';
+  if (authError) authError.textContent = '';
+  if (emailLabel) emailLabel.classList.toggle('hidden', mode === 'login');
 }
 
 function renderMessages(messages = [], currentUserId = null) {

@@ -15,9 +15,9 @@
       </div>
     </header>
 
-    <main class="auth-panel">
+    <main id="authSection" class="auth-panel">
       <div class="auth-card">
-        <h2>Sign up</h2>
+        <h2 id="authTitle">Sign up</h2>
         <form id="authForm">
           <label>
             Username
@@ -27,7 +27,7 @@
             Display name
             <input id="displayNameInput" type="text" autocomplete="name" />
           </label>
-          <label>
+          <label id="emailLabel">
             Email
             <input id="emailInput" type="email" autocomplete="email" />
           </label>
@@ -38,8 +38,8 @@
           <button type="submit">Create account</button>
         </form>
         <p class="auth-switch">
-          Already have an account?
-          <a href="index.html" class="link-button">Log in</a>
+          <span id="authSwitchText">Already have an account?</span>
+          <button id="switchAuthButton" type="button" class="link-button">Log in</button>
         </p>
         <div id="authError" class="auth-error"></div>
       </div>
